@@ -48,13 +48,16 @@ jobs:
           echo "ticket_file=$FILENAME" >> $GITHUB_OUTPUT
 
       - name: Verify signature
+        env:
+          PUBLIC_KEY_B64: >
+            LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUZrd0V3WUhLb1pJemowQ0FRWUlLb1pJemowREFRY0RRZ0FFcjRqYlRwaHJKTU5EaHk3c0JUMmxPaXJVZXJDUwpORlBaeWlTQU41NWFSN3BXa0txbnVqc05ML3FXMnJNUEx6bmMvYTBaQjFxUzFVVkd4Mm90SnFtUjF3PT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==
         run: |
           TEMP_DIR=$(mktemp -d)
           cd $TEMP_DIR
           
           echo "Verifying ticket: ${{ steps.gatekeeper.outputs.ticket_file }}"
           
-          echo "${{ secrets.ECDSA_PUBLIC_KEY }}" > ecdsa_public.pem
+          echo ${{ env.PUBLIC_KEY_B64 }} | base64 -d > ecdsa_public.pem
           
           TICKET_ID=$(basename "${{ steps.gatekeeper.outputs.ticket_file }}" .txt)
           echo "Extracted Ticket ID: $TICKET_ID"
