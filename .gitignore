@@ -6,3 +6,4 @@ go.sum
 encryptor
 *.pem
 *.pub
+solver.py
