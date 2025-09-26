@@ -57,7 +57,7 @@ jobs:
           
           echo "Verifying ticket: ${{ steps.gatekeeper.outputs.ticket_file }}"
           
-          echo ${{ env.PUBLIC_KEY_B64 }} | base64 -d > ecdsa_public.pem
+          echo "${{ env.PUBLIC_KEY_B64 }}" | base64 -d > ecdsa_public.pem
           
           TICKET_ID=$(basename "${{ steps.gatekeeper.outputs.ticket_file }}" .txt)
           echo "Extracted Ticket ID: $TICKET_ID"
