@@ -43,7 +43,7 @@ The `encryptor` binary is a critical part of this challenge. It is a pre-compile
 2.  **Verify the Integrity (Important!):**
     To ensure your downloaded file is not corrupt, check its SHA256 hash. Open a terminal and run:
     ```bash
-    sha256sum encryptor-linux-static
+    sha256sum encryptor
     ```
     The output hash **must** match the following value exactly:
     `96e2b028f0952de96cd0a71e575c4fe392f5f95b885c6dcc23c542a860a7d1d5`
