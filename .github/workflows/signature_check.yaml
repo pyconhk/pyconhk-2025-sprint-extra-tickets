@@ -1,0 +1,74 @@
+name: Verify Ticket Submission
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'tickets/**'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate submission format
+        id: gatekeeper
+        run: |
+          CHANGED_FILES=$(git diff --name-status ${{ github.base_ref }}...${{ github.head_ref }})
+          
+          if [ $(echo "$CHANGED_FILES" | wc -l) -ne 1 ]; then
+            echo "::error::Pull Request must contain exactly one file."
+            exit 1
+          fi
+          
+          read -r STATUS FILENAME <<< "$CHANGED_FILES"
+          
+          if [ "$STATUS" != "A" ]; then
+            echo "::error::Only new file additions are allowed. You cannot modify or delete files."
+            exit 1
+          fi
+          
+          if [[ ! "$FILENAME" =~ ^tickets/.*\.txt$ ]]; then
+            echo "::error::File must be placed in the 'tickets/' directory and have a '.txt' extension."
+            exit 1
+          fi
+          
+          echo "✅ Submission format is valid."
+          
+          echo "ticket_file=$FILENAME" >> $GITHUB_OUTPUT
+
+      - name: Verify signature
+        run: |
+          TEMP_DIR=$(mktemp -d)
+          cd $TEMP_DIR
+          
+          echo "Verifying ticket: ${{ steps.gatekeeper.outputs.ticket_file }}"
+          
+          echo "${{ secrets.ECDSA_PUBLIC_KEY }}" > ecdsa_public.pem
+          
+          TICKET_ID=$(basename "${{ steps.gatekeeper.outputs.ticket_file }}" .txt)
+          echo "Extracted Ticket ID: $TICKET_ID"
+          
+          echo -n "$TICKET_ID" > ticket.txt
+          
+          SIGNATURE_B64=$(cat "${{ github.workspace }}/${{ steps.gatekeeper.outputs.ticket_file }}")
+          
+          if [ -z "$SIGNATURE_B64" ]; then
+            echo "::error::The submitted ticket file is empty."
+            exit 1
+          fi
+          
+          echo "$SIGNATURE_B64" | base64 -d > signature.bin
+          
+          echo "Running openssl verification..."
+          if openssl dgst -sha256 -verify ecdsa_public.pem -signature signature.bin ticket.txt; then
+            echo "✅ Signature Verification Successful!"
+          else
+            echo "::error::Signature verification failed. The signature does not match the ticket ID."
+            exit 1
+          fi
