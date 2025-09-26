@@ -46,28 +46,6 @@ jobs:
 
           echo "✅ Submission format is valid."
           echo "ticket_file=$FILENAME" >> $GITHUB_OUTPUT
-          # CHANGED_FILES=$(git diff --name-status ${{ github.base_ref }}...${{ github.head_ref }})
-          
-          # if [ $(echo "$CHANGED_FILES" | wc -l) -ne 1 ]; then
-          #   echo "::error::Pull Request must contain exactly one file."
-          #   exit 1
-          # fi
-          
-          # read -r STATUS FILENAME <<< "$CHANGED_FILES"
-          
-          # if [ "$STATUS" != "A" ]; then
-          #   echo "::error::Only new file additions are allowed. You cannot modify or delete files."
-          #   exit 1
-          # fi
-          
-          # if [[ ! "$FILENAME" =~ ^tickets/.*\.txt$ ]]; then
-          #   echo "::error::File must be placed in the 'tickets/' directory and have a '.txt' extension."
-          #   exit 1
-          # fi
-          
-          # echo "✅ Submission format is valid."
-          
-          # echo "ticket_file=$FILENAME" >> $GITHUB_OUTPUT
 
       - name: Verify signature
         run: |
