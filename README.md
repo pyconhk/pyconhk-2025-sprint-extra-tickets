@@ -66,6 +66,8 @@ python registration.py --order-id <your order id> --key-path <path/to/private_ke
 
 **Important:** Please never ever share your **ticket id** to anyone, including in your PR. Once it is leaked, you risk losing your ticket.
 
+**PS:** Although the script accepts any order ID format, only valid Eventbrite order IDs will be accepted during verification. If we can't verify your order ID, **your PR will be rejected**.
+
 ---
 
 ## 🚩 How to Claim Your Sprint Day Ticket
