@@ -42,7 +42,7 @@ pip install -r requirements.txt
 
 ### Step 4: Find the Password in our Discord Channel
 
-Join our [Discord channel](https://bit.ly/pyconhk) and look for the `#sprint` channel. The password to unzip the `locked_key.zip` file is hidden somewhere in the channel. It might be in a pinned message, a bot message, or even a reply to another message.
+Join our [Discord channel](https://bit.ly/pyconhk) and look for the `#2025-sprint` channel. The password to unzip the `locked_key.zip` file is hidden somewhere in the channel.
 
 Once you find the password, unzip the file:
 
